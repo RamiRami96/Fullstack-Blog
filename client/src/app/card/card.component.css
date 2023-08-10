@@ -1,11 +1,13 @@
 .post-title {
   font-size: 18px;
   margin: 0;
+  word-wrap: break-word;
 }
 
 .post-content {
   margin-top: 5px;
   font-size: 14px;
+  word-wrap: break-word;
 }
 
 .post-image {
