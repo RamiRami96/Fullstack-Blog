@@ -2,18 +2,19 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as uuid from 'uuid';
+import { UploadedImage } from 'src/interfaces/uploadedImage';
 
 @Injectable()
 export class ImagesService {
-  async createFile(file: string): Promise<string> {
+  async createFile(file: UploadedImage): Promise<string> {
     try {
-      const fileName = 'image-' + uuid.v4() + '.jpg';
-      const filePath = path.resolve(__dirname, '..', 'static');
+      const format = file.originalname.split('.').at(-1);
+      const fileName = `image-${uuid.v4()}.${format}`;
 
-      if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath, { recursive: true });
-      }
-      fs.writeFileSync(path.join(filePath, fileName), (file as any).buffer);
+      fs.writeFileSync(
+        path.join(process.cwd(), '/static', fileName),
+        (file as any).buffer,
+      );
       return fileName;
     } catch (e) {
       throw new HttpException(

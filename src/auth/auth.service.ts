@@ -24,20 +24,19 @@ export class AuthService {
 
   async registration(dto: RegisterDTO) {
     if (!dto.email) throw new ForbiddenException('Email has not been found');
+    try {
+      const hashPassword = await bcrypt.hash(dto.password, 7);
 
-    const candidate = await this.userService.getUser(dto.email);
+      const user: User = await this.userService.createUser({
+        ...dto,
+        password: hashPassword,
+      });
 
-    if (candidate)
+      return this.generateToken(user);
+    } catch (error) {
+      console.log(error);
       throw new ForbiddenException('Candidate with this email already exists');
-
-    const hashPassword = await bcrypt.hash(dto.password, 7);
-
-    const user: User = await this.userService.createUser({
-      ...dto,
-      password: hashPassword,
-    });
-
-    return this.generateToken(user);
+    }
   }
 
   async login(dto: LoginDTO) {

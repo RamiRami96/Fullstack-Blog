@@ -8,12 +8,12 @@ import { LoginDTO } from './dto/login.dto';
 @ApiTags('Auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-  @Post('/register')
+  @Post('/signup')
   registration(@Body() dto: RegisterDTO) {
     return this.authService.registration(dto);
   }
 
-  @Post('/login')
+  @Post('/signin')
   login(@Body() dto: LoginDTO) {
     return this.authService.login(dto);
   }
