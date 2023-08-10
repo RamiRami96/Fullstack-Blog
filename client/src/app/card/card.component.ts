@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Post } from 'src/interfaces/post';
+import { GlobalVariables } from '../global-variables';
 
 @Component({
   selector: 'app-card',
@@ -12,4 +13,6 @@ export class CardComponent {
   @Input() image!: string;
 
   @Output() removePost = new EventEmitter<Post>();
+
+  baseUrl = GlobalVariables.baseUrl;
 }

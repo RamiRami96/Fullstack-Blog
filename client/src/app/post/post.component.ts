@@ -18,7 +18,6 @@ export class PostComponent implements OnInit {
       title: ['', [Validators.required]],
       content: ['', [Validators.required]],
       image: [null, [Validators.required]],
-      userId: [this.userId, [Validators.required]],
     });
   }
 
@@ -52,7 +51,10 @@ export class PostComponent implements OnInit {
 
       this.postService.addPost(newPost).subscribe({
         complete: console.info,
-        next: (data) => (this.posts = [...this.posts, data as Post]),
+        next: (data) => {
+          this.posts = [...this.posts, data as Post];
+          this.postForm.reset();
+        },
         error: console.error,
       });
     }

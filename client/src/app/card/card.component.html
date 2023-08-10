@@ -1,9 +1,4 @@
 <button class="close-button" (click)="removePost.emit()">Delete</button>
 <h4 class="post-title">{{ title | uppercase }}</h4>
 <p class="post-content">{{ content }}</p>
-<!-- set url to global variable -->
-<img
-  [src]="'http://localhost:5000/' + image"
-  alt="post_image"
-  class="post-image"
-/>
+<img [src]="baseUrl + '/' + image" alt="post_image" class="post-image" />

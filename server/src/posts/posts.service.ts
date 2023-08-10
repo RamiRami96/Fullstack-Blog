@@ -6,6 +6,8 @@ import {
 import { ImagesService } from 'src/images/images.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import * as fs from 'fs/promises';
+import { join } from 'path';
 
 @Injectable()
 export class PostsService {
@@ -41,16 +43,25 @@ export class PostsService {
   }
 
   async deletePost(id: number, userId: number) {
-    const post = await this.prisma.post.findUnique({ where: { id } });
+    try {
+      const post = await this.prisma.post.findUnique({ where: { id } });
 
-    if (!post) {
-      throw new NotFoundException('Post not found');
+      if (!post) {
+        throw new NotFoundException('Post not found');
+      }
+
+      if (post.userId !== userId) {
+        throw new ForbiddenException('You are not allowed to delete this post');
+      }
+
+      const deletePath = join(process.cwd(), '/static', post.image);
+      console.log(deletePath);
+
+      await fs.unlink(deletePath);
+
+      return this.prisma.post.delete({ where: { id } });
+    } catch (error) {
+      console.log(error);
     }
-
-    if (post.userId !== userId) {
-      throw new ForbiddenException('You are not allowed to delete this post');
-    }
-
-    return this.prisma.post.delete({ where: { id } });
   }
 }

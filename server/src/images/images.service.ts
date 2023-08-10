@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as path from 'path';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as uuid from 'uuid';
 import { UploadedImage } from 'src/interfaces/uploadedImage';
 
@@ -11,7 +11,7 @@ export class ImagesService {
       const format = file.originalname.split('.').at(-1);
       const fileName = `image-${uuid.v4()}.${format}`;
 
-      fs.writeFileSync(
+      fs.writeFile(
         path.join(process.cwd(), '/static', fileName),
         (file as any).buffer,
       );

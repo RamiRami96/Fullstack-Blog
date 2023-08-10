@@ -5,12 +5,12 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import path from 'path';
+import { join } from 'path';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: path.join(process.cwd(), '/static/'),
+      rootPath: join(process.cwd(), '/static/'),
       serveStaticOptions: { index: false },
     }),
     UsersModule,
