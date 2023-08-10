@@ -1,0 +1,31 @@
+<form [formGroup]="postForm" (ngSubmit)="addPost()">
+  <div>
+    <label for="title">Title:</label>
+    <input type="text" id="title" formControlName="title" />
+  </div>
+  <div>
+    <label for="content">Content:</label>
+    <textarea id="content" formControlName="content"></textarea>
+  </div>
+  <div>
+    <label for="image">Image URL:</label>
+    <input
+      type="file"
+      id="image"
+      #filepicker
+      (change)="onImagePicked($event)"
+    />
+  </div>
+  <button type="submit" [disabled]="postForm.invalid">Add Post</button>
+</form>
+
+<ul *ngIf="posts && posts.length > 0" class="post-container">
+  <li *ngFor="let post of posts" class="post-item">
+    <app-card
+      [title]="post.title"
+      [content]="post.content"
+      [image]="post.image"
+      (removePost)="removePost(post.id, userId)"
+    ></app-card>
+  </li>
+</ul>

@@ -1,0 +1,16 @@
+<ng-container *ngIf="user; else notUserBlock">
+  <div class="header">
+    <h1 class="username">{{ user.name }}</h1>
+    <button class="redirect-btn" (click)="logout()">Log out</button>
+  </div>
+  <div class="container">
+    <app-post userId="{{ user.id }}"></app-post>
+  </div>
+</ng-container>
+
+<ng-template #notUserBlock>
+  <div class="header">
+    <h1 class="username">Blog App</h1>
+    <button class="redirect-btn" (click)="redirectToSignIn()">Log in</button>
+  </div>
+</ng-template>
