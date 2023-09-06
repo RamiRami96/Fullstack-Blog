@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PostService } from './post.service';
+import { PostService } from '../../services/post.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Post } from 'src/interfaces/post';
+import { Post } from 'src/app/models/post';
+import { BehaviorSubject } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post',
@@ -10,7 +12,7 @@ import { Post } from 'src/interfaces/post';
 })
 export class PostComponent implements OnInit {
   postForm: FormGroup;
-  posts!: Post[];
+  posts$: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
   @Input() userId!: string;
 
   constructor(private postService: PostService, private fb: FormBuilder) {
@@ -22,13 +24,22 @@ export class PostComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.postService.getPosts(this.userId).subscribe({
-      complete: console.info,
-      next: (data) => {
-        this.posts = data;
-      },
-      error: console.error,
-    });
+    this.loadPosts();
+  }
+
+  private loadPosts() {
+    this.postService
+      .getPosts(this.userId)
+      .pipe(
+        tap((data) => {
+          this.posts$.next(data);
+        }),
+        catchError((error) => {
+          console.error(error);
+          return [];
+        })
+      )
+      .subscribe();
   }
 
   onImagePicked(event: Event) {
@@ -49,25 +60,36 @@ export class PostComponent implements OnInit {
       newPost.append('image', this.postForm.get('image')?.value);
       newPost.append('userId', String(this.userId));
 
-      this.postService.addPost(newPost).subscribe({
-        complete: console.info,
-        next: (data) => {
-          this.posts = [...this.posts, data as Post];
-          this.postForm.reset();
-        },
-        error: console.error,
-      });
+      this.postService
+        .addPost(newPost)
+        .pipe(
+          tap((data) => {
+            this.posts$.next([...this.posts$.value, data as Post]);
+            this.postForm.reset();
+          }),
+          catchError((error) => {
+            console.error(error);
+            return [];
+          })
+        )
+        .subscribe();
     }
   }
 
   removePost(id: string, userId: string) {
-    this.postService.removePost(id, userId).subscribe({
-      complete: console.info,
-      next: (data) =>
-        (this.posts = this.posts.filter(
-          (post) => post.id !== (data as Post).id
-        )),
-      error: console.error,
-    });
+    this.postService
+      .removePost(id, userId)
+      .pipe(
+        tap((data) => {
+          this.posts$.next(
+            this.posts$.value.filter((post) => post.id !== (data as Post).id)
+          );
+        }),
+        catchError((error) => {
+          console.error(error);
+          return [];
+        })
+      )
+      .subscribe();
   }
 }

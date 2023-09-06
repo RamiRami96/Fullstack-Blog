@@ -20,7 +20,7 @@
     <button type="submit" [disabled]="postForm.invalid">Add Post</button>
   </form>
 
-  <ul *ngIf="posts && posts.length > 0" class="post-container">
+  <ul *ngIf="posts$ | async as posts; else noPosts" class="post-container">
     <li *ngFor="let post of posts" class="post-item">
       <app-card
         [title]="post.title"
@@ -30,4 +30,8 @@
       ></app-card>
     </li>
   </ul>
+
+  <ng-template #noPosts>
+    <p>No posts available.</p>
+  </ng-template>
 </div>

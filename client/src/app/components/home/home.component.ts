@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
-import { User } from 'src/interfaces/user';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +10,9 @@ import { User } from 'src/interfaces/user';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  user: User | null = null;
+  private userSubject: BehaviorSubject<User | null> =
+    new BehaviorSubject<User | null>(null);
+  user$: Observable<User | null> = this.userSubject.asObservable();
 
   constructor(private router: Router) {}
 
@@ -17,13 +20,18 @@ export class HomeComponent implements OnInit {
     const token = localStorage.getItem('token');
 
     if (token) {
-      this.user = jwt_decode(token);
+      const decodedUser = jwt_decode(token);
+      this.setUser(decodedUser as User);
     }
+  }
+
+  private setUser(user: User | null) {
+    this.userSubject.next(user);
   }
 
   logout() {
     localStorage.removeItem('token');
-    this.user = null;
+    this.setUser(null);
   }
 
   redirectToSignIn() {

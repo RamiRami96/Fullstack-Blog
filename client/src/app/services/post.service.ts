@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GlobalVariables } from '../global-variables';
-import { Post } from 'src/interfaces/post';
+import { Post } from 'src/app/models/post';
 
 @Injectable({
   providedIn: 'root',

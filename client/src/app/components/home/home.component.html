@@ -1,10 +1,10 @@
-<ng-container *ngIf="user; else notUserBlock">
+<ng-container *ngIf="user$ | async; else notUserBlock">
   <div class="header">
-    <h1 class="username">{{ user.name }}</h1>
+    <h1 class="username">{{ (user$ | async)?.name }}</h1>
     <button class="redirect-btn" (click)="logout()">Log out</button>
   </div>
   <div class="app-container">
-    <app-post userId="{{ user.id }}"></app-post>
+    <app-post userId="{{ (user$ | async)?.id }}"></app-post>
   </div>
 </ng-container>
 

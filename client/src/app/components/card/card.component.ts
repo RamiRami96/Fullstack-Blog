@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Post } from 'src/interfaces/post';
-import { GlobalVariables } from '../global-variables';
+import { Post } from 'src/app/models/post';
+import { GlobalVariables } from '../../global-variables';
 
 @Component({
   selector: 'app-card',
