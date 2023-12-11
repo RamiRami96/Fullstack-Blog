@@ -1,2 +1,2 @@
-# Simple blog
-Simple blog with Nest.js and Angular
+# Fullstack Blog
+Fullstack Blog with Nest.js and Angular
