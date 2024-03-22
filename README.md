@@ -1,2 +1,2 @@
-# Fullstack Blog
-Fullstack Blog with Nest.js and Angular
+# Blog API
+Blog API with Nest.js
